@@ -10,28 +10,32 @@ export default function App() {
   const [listOfTasks, setTask] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:2222/todo").then(({ data }) => {
+    axios.get("https://to-do-crud.onrender.com/todo").then(({ data }) => {
       setTask(data);
     });
   }, []);
 
   function createTodo() {
     axios
-      .post("http://localhost:2222/todo/create", { todo: inputValue })
+      .post("https://to-do-crud.onrender.com/todo/create", { todo: inputValue })
       .then(({ data }) => {
         setTask(data);
       });
   }
 
   function deleteTodo(id) {
-    axios.delete("http://localhost:2222/todo/delete/" + id).then(({ data }) => {
-      setTask(data);
-    });
+    axios
+      .delete("https://to-do-crud.onrender.com/todo/delete/" + id)
+      .then(({ data }) => {
+        setTask(data);
+      });
   }
 
   function updateTodo(id) {
     axios
-      .put("http://localhost:2222/todo/update/" + id, { todo: inputValue })
+      .put("https://to-do-crud.onrender.com/todo/update/" + id, {
+        todo: inputValue,
+      })
       .then(({ data }) => {
         setTask(data);
       });
