@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BsTrash3 } from "react-icons/bs";
 import { MdOutlineModeEdit } from "react-icons/md";
@@ -8,10 +8,14 @@ import axios from "axios";
 export default function App() {
   const [inputValue, setValue] = useState("");
   const [listOfTasks, setTask] = useState([]);
-  const [editInput, setEditInput] = useState(false);
+  const [editButton, setEditButton] = useState(false);
+  const [addButton, steAddButton] = useState(true);
   const [editValue, setEditValue] = useState("");
+  const [taskId, setTaskId] = useState("");
+  const inputRef = useRef(null);
 
   useEffect(() => {
+    inputRef.current.focus();
     axios.get("https://to-do-crud.onrender.com/todo").then(({ data }) => {
       setTask(data);
     });
@@ -36,15 +40,19 @@ export default function App() {
   function updateTodo(id) {
     axios
       .put("https://to-do-crud.onrender.com/todo/update/" + id, {
-        todo: editValue,
+        todo: inputValue,
       })
       .then(({ data }) => {
         setTask(data);
       });
   }
 
-  function showEditInput() {
-    setEditInput(!editInput);
+  function showEditButton() {
+    setEditButton(!editButton);
+  }
+
+  function showAddButton() {
+    steAddButton(!addButton);
   }
 
   return (
@@ -52,17 +60,34 @@ export default function App() {
       <h1>To-do List</h1>
       <div className="input">
         <input
+          ref={inputRef}
           value={inputValue}
           onChange={(event) => setValue(event.target.value)}
         />
-        <button
-          onClick={() => {
-            createTodo();
-            setValue("");
-          }}
-        >
-          <AiOutlinePlus style={{ color: "mediumvioletred" }} />
-        </button>
+        {addButton && (
+          <button
+            onClick={() => {
+              createTodo();
+              setValue("");
+              inputRef.current.focus();
+            }}
+          >
+            <AiOutlinePlus style={{ color: "mediumvioletred" }} />
+          </button>
+        )}
+
+        {editButton && (
+          <button
+            onClick={() => {
+              updateTodo(taskId);
+              setValue("");
+              showEditButton();
+              showAddButton();
+            }}
+          >
+            <MdOutlineModeEdit style={{ fontSize: "18px", color: "#3AA655" }} />
+          </button>
+        )}
       </div>
       <div className="list">
         <ul>
@@ -82,30 +107,16 @@ export default function App() {
                 <button
                   className="edit"
                   onClick={() => {
-                    showEditInput();
+                    setTaskId(task._id);
+                    showAddButton();
+                    showEditButton();
+                    inputRef.current.focus();
                   }}
                 >
                   <MdOutlineModeEdit
                     style={{ fontSize: "18px", color: "#3AA655" }}
                   />
                 </button>
-                {editInput && (
-                  <div>
-                    <input
-                      value={editValue}
-                      onChange={(event) => setEditValue(event.target.value)}
-                    />
-                    <button
-                      onClick={() => {
-                        updateTodo(task._id);
-                        setEditValue("");
-                        showEditInput();
-                      }}
-                    >
-                      <AiOutlinePlus style={{ color: "mediumvioletred" }} />
-                    </button>
-                  </div>
-                )}
               </li>
             );
           })}
