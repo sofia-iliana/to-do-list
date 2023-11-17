@@ -8,6 +8,8 @@ import axios from "axios";
 export default function App() {
   const [inputValue, setValue] = useState("");
   const [listOfTasks, setTask] = useState([]);
+  const [editInput, setEditInput] = useState(false);
+  const [editValue, setEditValue] = useState("");
 
   useEffect(() => {
     axios.get("https://to-do-crud.onrender.com/todo").then(({ data }) => {
@@ -39,6 +41,10 @@ export default function App() {
       .then(({ data }) => {
         setTask(data);
       });
+  }
+
+  function showEditInput() {
+    setEditInput(!editInput);
   }
 
   return (
@@ -76,14 +82,30 @@ export default function App() {
                 <button
                   className="edit"
                   onClick={() => {
-                    updateTodo(task._id);
-                    setValue("");
+                    showEditInput();
                   }}
                 >
                   <MdOutlineModeEdit
                     style={{ fontSize: "18px", color: "#3AA655" }}
                   />
                 </button>
+                {editInput && (
+                  <div>
+                    <input
+                      value={editValue}
+                      onChange={(event) => setEditValue(event.target.value)}
+                    />
+                    <button
+                      onClick={() => {
+                        updateTodo(task._id);
+                        setValue("");
+                        showEditInput();
+                      }}
+                    >
+                      <AiOutlinePlus style={{ color: "mediumvioletred" }} />
+                    </button>
+                  </div>
+                )}
               </li>
             );
           })}

@@ -4,7 +4,11 @@ app.use(express.json());
 const router = require("./routers/TodoRouter.js");
 
 const cors = require("cors");
-app.use(cors({ origin: "https://to-do-list-8b6d.onrender.com" }));
+app.use(
+  cors({
+    origin: "https://to-do-list-8b6d.onrender.com",
+  })
+);
 
 app.use("/", router);
 

@@ -45,6 +45,10 @@ button {
   background: none;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 h1 {
   text-align: center;
   color: #fafa37;
