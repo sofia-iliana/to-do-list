@@ -36,7 +36,7 @@ export default function App() {
   function updateTodo(id) {
     axios
       .put("https://to-do-crud.onrender.com/todo/update/" + id, {
-        todo: inputValue,
+        todo: editValue,
       })
       .then(({ data }) => {
         setTask(data);
@@ -98,7 +98,7 @@ export default function App() {
                     <button
                       onClick={() => {
                         updateTodo(task._id);
-                        setValue("");
+                        setEditValue("");
                         showEditInput();
                       }}
                     >
